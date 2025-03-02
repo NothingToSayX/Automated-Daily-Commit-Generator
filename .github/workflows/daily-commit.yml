@@ -1,0 +1,25 @@
+name: Daily Commit
+
+# Set up the trigger to run daily at midnight UTC
+on:
+  schedule:
+    - cron: '0 0 * * *'  # This will run the action every day at midnight UTC
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest  # This is the environment where the job runs (Ubuntu)
+
+    steps:
+      # Check out the repository code so we can modify it
+      - name: Check out repository
+        uses: actions/checkout@v2
+
+      # Create a new commit (modify a file)
+      - name: Create a new commit
+        run: |
+          echo "Commit made on $(date)" >> commit_log.txt
+          git add commit_log.txt
+          git commit -m "Automated daily commit"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub's secret token for authentication
